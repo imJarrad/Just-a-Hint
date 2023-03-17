@@ -1,3 +1,5 @@
+// RRSS: update your site name and url etc
+
 export default {
 	title: `Just a Hint`,
 	description: `Daily Hints for your favourite word games.`,
