@@ -1,4 +1,4 @@
 [build]
-  base = "src/"
+  base = "/"
   publish = "dist/"
   command = "npm run build"
