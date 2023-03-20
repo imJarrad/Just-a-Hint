@@ -27,7 +27,6 @@ Odyssey Theme is a modern theme/starter for a business or startup's marketing we
   <img src="assets/lh-screenshot.png" alt="Screenshot of perfect score in Lighthouse benchmark">
 </p>
 
-
 - ✅ **A perfect score in Lighthouse**
 - ✅ **Blazing fast performance thanks to Astro 🚀**
 - ✅ **A Full Featured Blog with Tagging**
@@ -37,7 +36,6 @@ Odyssey Theme is a modern theme/starter for a business or startup's marketing we
 - ✅ **Performant Local Fonts Setup**
 - ✅ **Contact Forms Setup for Netlify, Formspree, Formspark, etc.**
 - ✅ **A package of ready-to-use UI components**
-
 
 ## Demo
 

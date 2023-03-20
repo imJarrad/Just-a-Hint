@@ -3,33 +3,34 @@ import { Icon } from 'astro-icon';
 import { Container, Button } from '@littlesticks/odyssey-theme-components';
 import settings from '../../../config/settings.js';
 ---
+
 <!-- RRSS: this updates the homepage hero section. Drop a headline, tag, button copy, button destination -->
 <Container>
 	<section class="hero-section__section">
 		<div class="hero-section__text">
-				<h1>Don't Lose Your Streak</h1>
-				<p>
-					We help honest players get unstuck, with daily hints for your favourite games.
-				</p>
-				<div class="hero-btns__container">
-					<Button href="/theme/get-started" customIcon
-						>See Today's Hints
-            <Fragment slot="icon">
-              <Icon name="ic:baseline-chevron-right"/>
-            </Fragment>
-            </Button
-					>
-					<!-- <Button href="/theme/style-guide" unelevated>Style Guide</Button> Uncomment this to get a second button back on the homepage -->
-				</div>
+			<h1>Don't Lose Your Streak</h1>
+			<p>
+				We help honest players get unstuck, with daily hints for your favourite
+				games.
+			</p>
+			<div class="hero-btns__container">
+				<Button href="/theme/get-started" customIcon
+					>See Today's Hints
+					<Fragment slot="icon">
+						<Icon name="ic:baseline-chevron-right" />
+					</Fragment>
+				</Button>
+				<!-- <Button href="/theme/style-guide" unelevated>Style Guide</Button> Uncomment this to get a second button back on the homepage -->
+			</div>
 		</div>
 		<div class="hero-section__image">
-				<picture>
-					<img
-						src="/assets/images/home/classic-hero.jpg"
-						alt="Astro Odyssey"
-						id="home-hero-image"
-					/>
-				</picture>
+			<picture>
+				<img
+					src="/assets/images/home/classic-hero.jpg"
+					alt="Astro Odyssey"
+					id="home-hero-image"
+				/>
+			</picture>
 		</div>
 	</section>
 </Container>
