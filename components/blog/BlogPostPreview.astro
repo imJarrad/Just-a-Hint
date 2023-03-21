@@ -1,10 +1,10 @@
 ---
-const {title, post} = Astro.props;
+const {post} = Astro.props;
 ---
 
 <li class="blog-post__preview">
   <a href={post.href}>
-    <img src={post.featuredImage} alt={title}/>
+    <img src={post.featuredImage} alt={post.title}/>
     <h3>{post.title}</h3>
     {post.excerpt && <p>{post.excerpt}</p>}
   </a>
