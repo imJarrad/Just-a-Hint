@@ -18,6 +18,11 @@ const seo = {
 	canonicalURL,
 	image: featuredImage,
 };
+
+if (featuredImage) {
+  featuredImage.alt = title;
+}
+
 ---
 <Layout seo={seo}> 
   <div class="post-header__container"> 
