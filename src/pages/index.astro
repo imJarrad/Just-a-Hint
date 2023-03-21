@@ -25,8 +25,8 @@ import {
 	TextCardSection,
 	BlogPostsList,
 } from '@littlesticks/odyssey-theme-components';
-import Layout from '../layouts/Page.astro';
 import NewsletterForm from '../components/forms/NewsletterForm.astro';
+import { Icon } from 'astro-icon';
 
 const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 	posts
