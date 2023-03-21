@@ -8,23 +8,21 @@ import {
 	ThreeColumnTextSection,
 	// YouTubeEmbedSection,
   StickyTextImageSection,
-  CtaCardSection
+  CtaCardSection,
+	TextCardSection,
+	BlogPostsList,
 } from '@littlesticks/odyssey-theme-components';
 import Layout from '../layouts/Page.astro';
 import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
 
 const seo = {
-	title: 'Landing Page #1 | Astro Odyssey Theme',
-	description: 'Landing Page #1 | Astro Odyssey Theme',
+	title: 'Home | Just a Hint',
+	description: 'Homepage of Word Game hint site Just a Hint',
 };
 
 // below frontmatter is from template's blog page
 
 import { parse, isBefore } from 'date-fns';
-import {
-	TextCardSection,
-	BlogPostsList,
-} from '@littlesticks/odyssey-theme-components';
 import NewsletterForm from '../components/forms/NewsletterForm.astro';
 import { Icon } from 'astro-icon';
 
@@ -46,8 +44,9 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 		})
 );
 ---
+<!-- // RRSS: here's an announcement bar if you wanna put something up top of this homepage 
+<AnnouncementBar text="Read Our Latest Blog Post" href="/blog/posts/remote-work-mental-health/" slot="announcement-bar"/>  -->
 
-<AnnouncementBar text="Read Our Latest Blog Post" href="/blog/posts/remote-work-mental-health/" slot="announcement-bar"/>
 <Layout seo={seo} >
 	
 	<HomeHeroSection />
