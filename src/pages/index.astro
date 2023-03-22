@@ -42,7 +42,7 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 );
 
 //images 
-import homepage_img_1 from '../assets/images/genericwordle.jpg'
+import homepage_img_1 from '../assets/images/justahint-3.webp'
 
 ---
 
@@ -118,15 +118,12 @@ import homepage_img_1 from '../assets/images/genericwordle.jpg'
 			mollitia cumque. Velit.
 		</p>
 		</div>
-		<!-- <picture slot="image-container">
-		<img
-			src="/assets/images/home/justahint-3.webp"
-			alt="Astro Odyssey"
+		<img 
+			slot="image-container"
+			src={homepage_img_1.src}
+			alt="ancient greek scholars looking at a daily word game hint."
 			loading="lazy"
 		/>
-		</picture> -->
-
-		<img src={homepage_img_1.src} alt="ancient greek scholars looking at a daily word game hint." />
   </StickyTextImageSection>
 
   <CtaCardSection background="var(--theme-surface-2)" color="var(--theme-on-surface-2)">
