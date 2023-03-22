@@ -14,17 +14,14 @@ import {
 } from '@littlesticks/odyssey-theme-components';
 import Layout from '../layouts/Page.astro';
 import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
+import { parse, isBefore } from 'date-fns';
+import NewsletterForm from '../components/forms/NewsletterForm.astro';
+import { Icon } from 'astro-icon';
 
 const seo = {
 	title: 'Home | Just a Hint',
 	description: 'Homepage of Word Game hint site Just a Hint',
 };
-
-// below frontmatter is from template's blog page
-
-import { parse, isBefore } from 'date-fns';
-import NewsletterForm from '../components/forms/NewsletterForm.astro';
-import { Icon } from 'astro-icon';
 
 const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 	posts
@@ -121,13 +118,13 @@ import homepage_img_1 from '../assets/images/genericwordle.jpg'
 			mollitia cumque. Velit.
 		</p>
 		</div>
-		<picture slot="image-container">
+		<!-- <picture slot="image-container">
 		<img
 			src="/assets/images/home/justahint-3.webp"
 			alt="Astro Odyssey"
 			loading="lazy"
 		/>
-		</picture>
+		</picture> -->
 
 		<img src={homepage_img_1.src} alt="ancient greek scholars looking at a daily word game hint." />
   </StickyTextImageSection>
