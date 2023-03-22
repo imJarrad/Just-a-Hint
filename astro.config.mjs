@@ -17,4 +17,8 @@ export default defineConfig({
       external: ["svgo"],
     },
   },
+  // Experimental images/assets
+  experimental: {
+    assets: true
+   }
 });

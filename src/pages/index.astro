@@ -43,6 +43,10 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 			return 0;
 		})
 );
+
+//images 
+import homepage_img_1 from '../assets/images/genericwordle.jpg'
+
 ---
 
 <!-- // RRSS: here's an announcement bar if you wanna put something up top of this homepage 
@@ -124,6 +128,8 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 			loading="lazy"
 		/>
 		</picture>
+
+		<img src={homepage_img_1.src} alt="ancient greek scholars looking at a daily word game hint." />
   </StickyTextImageSection>
 
   <CtaCardSection background="var(--theme-surface-2)" color="var(--theme-on-surface-2)">
