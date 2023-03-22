@@ -4,7 +4,7 @@ import { Container, Button } from '@littlesticks/odyssey-theme-components';
 import settings from '../../../config/settings.js';
 
 //images 
-// import homepage_img_1 from '../assets/images/justahint-3.webp'
+import homepage_img_1 from '../assets/images/justahint-3.webp'
 
 
 ---
@@ -28,13 +28,10 @@ import settings from '../../../config/settings.js';
 				</div>
 		</div>
 		<div class="hero-section__image"> 
-
-					<img 
-					src='../assets/images/justahint-3.webp'
-					alt="ancient greek scholars looking at a daily word game hint."
-				/>
-
-
+			<img
+			src={homepage_img_1.src}
+			alt="ancient greek scholars looking at a daily word game hint."
+			/>
 		</div>
 	</section>
 </Container>
