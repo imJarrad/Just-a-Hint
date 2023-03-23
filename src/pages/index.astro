@@ -1,6 +1,6 @@
 ---
 import {
-  AnnouncementBar,
+  // AnnouncementBar,
   	Container,
 	FeatureCard,
 	Button,
@@ -43,7 +43,7 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 
 //images 
 import homepage_img_1 from '../assets/images/justahint-3.webp'
-
+import hero_image from '../assets/images/justahint-hero.png'
 ---
 
 <!-- // RRSS: here's an announcement bar if you wanna put something up top of this homepage 
@@ -51,12 +51,39 @@ import homepage_img_1 from '../assets/images/justahint-3.webp'
 
 <Layout seo={seo} >
 	
-	<HomeHeroSection />
+	<!-- 
+		this is the whole code from the homeHeroSection component, 
+		I couldn't get the images to work when importing the component, 
+		so I've just brought the whole component in here  
+	-->
+
+	<Container>
+		<section class="hero-section__section">
+			<div class="hero-section__text">
+					<h1>Don't Lose Your Streak</h1>
+					<p>
+						We help honest players get unstuck, with daily hints for your favourite games.
+					</p>
+					<div class="hero-btns__container">
+						<Button href="/theme/get-started" customIcon
+							>See Today's Hints
+				<Fragment slot="icon">
+				  <Icon name="ic:baseline-chevron-right"/>
+				</Fragment>
+				</Button
+						>
+						<!-- <Button href="/theme/style-guide" unelevated>Style Guide</Button> Uncomment this to get a second button back on the homepage -->
+					</div>
+			</div>
 	
-	<img 
-			src={homepage_img_1.src}
-			alt="ancient greek scholars looking at a daily word game hint."
-		/>
+			<div class="hero-section__image"> 
+				<img 
+					src={hero_image.src}
+					alt="ancient greek scholars looking at a daily word game hint."
+				/>
+			</div>
+		</section>
+	</Container>
 
 	<CustomerQuoteSection
 		quoteText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, vero nobis? Voluptas assumenda, voluptatibus commodi qui ducimus delectus praesentium maiores, impedit iure labore ratione, ea facilis numquam doloremque aperiam aspernatur."
@@ -190,5 +217,48 @@ import homepage_img_1 from '../assets/images/justahint-3.webp'
 /* this blog-posts styling is from the template's blog page */
 	.blog-posts-list__section {
 		margin: var(--section-margin) auto;
+	}
+
+	/* 	
+		this styling is for the HomeHeroSection.  
+		the only reason it needs to be here is because 
+		I had to pull the HomeHeroSection in here because 
+		images weren't working when importing the component. 
+		If I fix that, remove this styling. 
+	*/
+	.hero-section__section {
+		margin: var(--section-margin) auto;
+		min-height: clamp(90vh, 100vw, calc(100vh - var(--navbar-height)));
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero-section__text {
+		justify-self: center;
+		max-width: 25rem;
+	}
+	.hero-btns__container {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero-btns__container {
+		margin-right: 1rem;
+	}
+	.hero-section__image {
+		display: flex;
+	}
+	.hero-section__image img {
+		width: 100%;
+		height: 100%;
+		max-height: 80vh;
+		object-fit: cover;
+		border-radius: var(--theme-shape-radius);
+	}
+	@media (max-width: 768px) {
+		.hero-section__section {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

@@ -4,7 +4,7 @@ import { Container, Button } from '@littlesticks/odyssey-theme-components';
 import settings from '../../../config/settings.js';
 
 //images 
-import homepage_img_1 from '../assets/images/justahint-3.webp'
+import hero_image from '../assets/images/justahint-hero.png'
 
 
 ---
@@ -27,14 +27,16 @@ import homepage_img_1 from '../assets/images/justahint-3.webp'
 					<!-- <Button href="/theme/style-guide" unelevated>Style Guide</Button> Uncomment this to get a second button back on the homepage -->
 				</div>
 		</div>
+
 		<div class="hero-section__image"> 
-			<img
-			src={homepage_img_1.src}
+			<img 
+			src={hero_image.src}
 			alt="ancient greek scholars looking at a daily word game hint."
 			/>
 		</div>
 	</section>
 </Container>
+
 
 <style>
 	.hero-section__section {
