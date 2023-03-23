@@ -64,7 +64,7 @@ import hero_image from '../assets/images/justahint-hero.webp'
 					<p>
 						We help honest players get unstuck, with daily hints for your favourite games.
 					</p>
-					<div class="hero-btns__container">
+					<div class="hero-btns__container"> <!-- TODO make this point to today's hint -->
 						<Button href="/theme/get-started" customIcon
 							>See Today's Hints
 				<Fragment slot="icon">
@@ -166,7 +166,10 @@ import hero_image from '../assets/images/justahint-hero.webp'
     </Fragment></Button>
   </CtaCardSection>
 	
-	<Container>
+	
+ <!--RRSS: TODO, I plan to use this section to display some key pSEO pages in the future, but right now it is not meaningful -->
+
+ 	<!-- <Container>
 		<section class="feature-card__section">
 			<h2>Landing Pages</h2>
 			<p>
@@ -180,12 +183,12 @@ import hero_image from '../assets/images/justahint-hero.webp'
 				</FeatureCard>
 			</div>
 		</section>
-	</Container>
+	</Container> -->
 
 	<!-- this container is from the template's blog page -->
 	<Container>
 		<section class="blog-posts-list__section">
-			<h2>Recent Posts</h2>
+			<h2>Recent Hints</h2>
 			<BlogPostsList posts={posts} />
 		</section>
 	</Container>
