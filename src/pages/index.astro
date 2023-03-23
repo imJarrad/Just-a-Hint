@@ -13,7 +13,7 @@ import {
 	BlogPostsList,
 } from '@littlesticks/odyssey-theme-components';
 import Layout from '../layouts/Page.astro';
-import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
+// import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
 import { parse, isBefore } from 'date-fns';
 import NewsletterForm from '../components/forms/NewsletterForm.astro';
 import { Icon } from 'astro-icon';
@@ -77,7 +77,7 @@ import hero_image from '../assets/images/justahint-hero.webp'
 			</div>
 	
 			<div class="hero-section__image"> 
-				<img 
+				<image 
 					src={hero_image.src}
 					alt="ancient greek scholars looking at a daily word game hint."
 				/>
@@ -150,7 +150,7 @@ import hero_image from '../assets/images/justahint-hero.webp'
 			mollitia cumque. Velit.
 		</p>
 		</div>
-		<img 
+		<image 
 			slot="image-container"
 			src={homepage_img_1.src}
 			alt="ancient greek scholars looking at a daily word game hint."
