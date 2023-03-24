@@ -2,6 +2,11 @@
 import { Icon } from 'astro-icon';
 import { Container, Button } from '@littlesticks/odyssey-theme-components';
 import settings from '../../../config/settings.js';
+
+//images 
+import hero_image from '../assets/images/justahint-hero.png'
+
+
 ---
 <!-- RRSS: this updates the homepage hero section. Drop a headline, tag, button copy, button destination -->
 <Container>
@@ -22,17 +27,16 @@ import settings from '../../../config/settings.js';
 					<!-- <Button href="/theme/style-guide" unelevated>Style Guide</Button> Uncomment this to get a second button back on the homepage -->
 				</div>
 		</div>
-		<div class="hero-section__image">
-				<picture>
-					<img
-						src="/assets/images/justahint-hero.webp"
-						alt="Word Game Hint Site Hero Image"
-						id="home-hero-image"
-					/>
-				</picture>
+
+		<div class="hero-section__image"> 
+			<img 
+			src={hero_image.src}
+			alt="ancient greek scholars looking at a daily word game hint."
+			/>
 		</div>
 	</section>
 </Container>
+
 
 <style>
 	.hero-section__section {

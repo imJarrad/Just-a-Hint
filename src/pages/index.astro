@@ -1,30 +1,28 @@
 ---
 import {
-  AnnouncementBar,
+  // AnnouncementBar,
   	Container,
-	FeatureCard,
+	// FeatureCard,
 	Button,
 	CustomerQuoteSection,
-	ThreeColumnTextSection,
+	// ThreeColumnTextSection,
 	// YouTubeEmbedSection,
   StickyTextImageSection,
   CtaCardSection,
-	TextCardSection,
-	BlogPostsList,
+	// TextCardSection,
+	// BlogPostsList,
 } from '@littlesticks/odyssey-theme-components';
 import Layout from '../layouts/Page.astro';
-import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
+// import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
+import { parse, isBefore } from 'date-fns';
+// import NewsletterForm from '../components/forms/NewsletterForm.astro';
+import { Icon } from 'astro-icon';
+import BlogPostsList from '../components/blog/BlogPostsList.astro';
 
 const seo = {
 	title: 'Home | Just a Hint',
 	description: 'Homepage of Word Game hint site Just a Hint',
 };
-
-// below frontmatter is from template's blog page
-
-import { parse, isBefore } from 'date-fns';
-import NewsletterForm from '../components/forms/NewsletterForm.astro';
-import { Icon } from 'astro-icon';
 
 const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 	posts
@@ -43,6 +41,10 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 			return 0;
 		})
 );
+
+//images 
+import homepage_img_1 from '../assets/images/justahint-3.webp'
+import hero_image from '../assets/images/justahint-hero.webp'
 ---
 
 <!-- // RRSS: here's an announcement bar if you wanna put something up top of this homepage 
@@ -50,14 +52,46 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 
 <Layout seo={seo} >
 	
-	<HomeHeroSection />
+	<!-- 
+		this is the whole code from the homeHeroSection component, 
+		I couldn't get the images to work when importing the component, 
+		so I've just brought the whole component in here  
+	-->
+
+	<Container>
+		<section class="hero-section__section">
+			<div class="hero-section__text">
+					<h1>Don't Lose Your Streak</h1>
+					<p>
+						We help honest players get unstuck, with daily hints for your favourite games.
+					</p>
+					<div class="hero-btns__container"> <!-- TODO make this point to today's hint -->
+						<Button href="/theme/get-started" customIcon
+							>See Today's Hints
+				<Fragment slot="icon">
+				  <Icon name="ic:baseline-chevron-right"/>
+				</Fragment>
+				</Button
+						>
+						<!-- <Button href="/theme/style-guide" unelevated>Style Guide</Button> Uncomment this to get a second button back on the homepage -->
+					</div>
+			</div>
 	
+			<div class="hero-section__image"> 
+				<image 
+					src={hero_image.src}
+					alt="ancient greek scholars looking at a daily word game hint."
+				/>
+			</div>
+		</section>
+	</Container>
+
 	<CustomerQuoteSection
-		quoteText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, vero nobis? Voluptas assumenda, voluptatibus commodi qui ducimus delectus praesentium maiores, impedit iure labore ratione, ea facilis numquam doloremque aperiam aspernatur."
-		customerName="Happy Customer"
+		quoteText="I love your hints!  Never any spoilers (because I still want to have fun) but some days, when I'm run off my feet, Just a Hint is exactly what I need."
+		customerName="Janice K"
 	/>
 
-	<ThreeColumnTextSection>
+	<!-- <ThreeColumnTextSection>
 		<div slot="column-1-body">
 			<h2>Why?</h2>
 			<p>
@@ -88,42 +122,36 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 			</p>
 		</div>
 		<Button slot="column-3-cta">Learn More</Button>
-	</ThreeColumnTextSection>
+	</ThreeColumnTextSection> -->
 
 	<!-- <YouTubeEmbedSection url="https://www.youtube.com/watch?v=cbYr75_R15M" rounded /> -->
 
   <StickyTextImageSection>
 		<div slot="text-container">
 		<h2>Features</h2>
-		<h3>SEO</h3>
+		<h3>No Cheating</h3>
 		<p>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-			tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-			consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-			mollitia cumque. Velit.
+			You can sleep well at night, because you completed the Wordle today with just a hint.  
+			Ahhhhh, feels good right? Dignity: intact.
 		</p>
-		<h3>Responsive</h3>
+		<h3>Made by Puzzle Fans</h3>
 			<p>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-			tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-			consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-			mollitia cumque. Velit.
+				Admit it.  You can't stop texting the group chat with your score, 
+				or smiling to yourself when you get a new streak record.  
+				We know, because... we do it too. 
 		</p>
-		<h3>Themeable</h3>
+		<h3>Ad Free</h3>
 			<p>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-			tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-			consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-			mollitia cumque. Velit.
+				We don't bombard you with ads, nor do we sell your data.  
+				Simple.
 		</p>
 		</div>
-		<picture slot="image-container">
-		<img
-			src="/assets/images/home/justahint-3.webp"
-			alt="Astro Odyssey"
+		<image 
+			slot="image-container"
+			src={homepage_img_1.src}
+			alt="ancient greek scholars looking at a daily word game hint."
 			loading="lazy"
 		/>
-		</picture>
   </StickyTextImageSection>
 
   <CtaCardSection background="var(--theme-surface-2)" color="var(--theme-on-surface-2)">
@@ -134,7 +162,10 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
     </Fragment></Button>
   </CtaCardSection>
 	
-	<Container>
+	
+ <!--RRSS: TODO, I plan to use this section to display some key pSEO pages in the future, but right now it is not meaningful -->
+
+ 	<!-- <Container>
 		<section class="feature-card__section">
 			<h2>Landing Pages</h2>
 			<p>
@@ -148,20 +179,12 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 				</FeatureCard>
 			</div>
 		</section>
-	</Container>
+	</Container> -->
 
 	<!-- this container is from the template's blog page -->
 	<Container>
-		<TextCardSection>
-			<h1>Odyssey Blog</h1>
-			<p>
-				View our blog to stay up to date on the latest news about our business.
-				Want to be the first to hear about a new blog post? Join our newsletter!
-			</p>
-			<NewsletterForm />
-		</TextCardSection>
 		<section class="blog-posts-list__section">
-			<h2>Recent Posts</h2>
+			<h2>Recent Hints</h2>
 			<BlogPostsList posts={posts} />
 		</section>
 	</Container>
@@ -185,5 +208,48 @@ const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
 /* this blog-posts styling is from the template's blog page */
 	.blog-posts-list__section {
 		margin: var(--section-margin) auto;
+	}
+
+	/* 	
+		this styling is for the HomeHeroSection.  
+		the only reason it needs to be here is because 
+		I had to pull the HomeHeroSection in here because 
+		images weren't working when importing the component. 
+		If I fix that, remove this styling. 
+	*/
+	.hero-section__section {
+		margin: var(--section-margin) auto;
+		min-height: clamp(90vh, 100vw, calc(100vh - var(--navbar-height)));
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero-section__text {
+		justify-self: center;
+		max-width: 25rem;
+	}
+	.hero-btns__container {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero-btns__container {
+		margin-right: 1rem;
+	}
+	.hero-section__image {
+		display: flex;
+	}
+	.hero-section__image img {
+		width: 100%;
+		height: 100%;
+		max-height: 80vh;
+		object-fit: cover;
+		border-radius: var(--theme-shape-radius);
+	}
+	@media (max-width: 768px) {
+		.hero-section__section {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>
