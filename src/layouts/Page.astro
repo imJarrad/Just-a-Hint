@@ -21,7 +21,8 @@ const { seo } = Astro.props as Props;
 		<span slot="logo">
 			<Logo />
 		</span>
-		<Button slot="action-item" href="/theme/get-started">See Today's Hints</Button>
+		<!-- RRSS: Nav button, point it at whetever you like, and rename -->
+		<Button slot="action-item" href="/blog" >See Today's Hints</Button> 
 	</Header>
 	<div id="page">
 		<slot />
