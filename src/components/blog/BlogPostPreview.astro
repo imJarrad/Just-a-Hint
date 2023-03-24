@@ -5,7 +5,7 @@ import blogImage from '../../assets/images/genericwordle.webp'
 
 <li class="blog-post__preview">
   <a href={post.href}>
-    <img src={blogImage.src} />
+    <image src={blogImage.src} alt={post.title} />
     <h3>{post.title}</h3>
     {post.excerpt && <p>{post.excerpt}</p>}
   </a>
