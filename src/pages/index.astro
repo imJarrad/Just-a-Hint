@@ -14,27 +14,33 @@ import {
 } from '@littlesticks/odyssey-theme-components';
 import Layout from '../layouts/Page.astro';
 // import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
-import { parse, isBefore } from 'date-fns';
+import { parse, isBefore, differenceInDays } from 'date-fns';
 // import NewsletterForm from '../components/forms/NewsletterForm.astro';
 import { Icon } from 'astro-icon';
 import BlogPostsList from '../components/blog/BlogPostsList.astro';
 
 const seo = {
-	title: 'Home | Just a Hint',
-	description: 'Homepage of Word Game hint site Just a Hint',
+	title: 'Wordle Hints | Just a Hint',
+	description: 'Daily Wordle Hints for Honest Players.',
 };
 
 const posts = await Astro.glob('./blog/posts/*.mdx').then(posts =>
-	posts
-		.map(({ frontmatter, url }) => ({
-			title: frontmatter.title,
-			description: frontmatter.description,
-			authors: frontmatter.authors,
-			publishDate: parse(frontmatter.publishDate, 'MMMM d, yyyy', new Date()),
-			featuredImage: frontmatter.featuredImage,
-			excerpt: frontmatter.excerpt,
-			href: url,
-		}))
+    posts
+        .map(({ frontmatter, url }) => {
+            const publishDate = frontmatter.publishDate ? parse(frontmatter.publishDate, 'EEEE, dd MMMM yyyy', new Date()) : null;
+            return {
+                title: frontmatter.title,
+                description: frontmatter.description,
+                authors: frontmatter.authors,
+                publishDate: publishDate,
+                featuredImage: frontmatter.featuredImage,
+                excerpt: frontmatter.excerpt,
+                href: url,
+            }
+        })
+        .filter(({ publishDate }) => {
+            return publishDate !== null && isBefore(publishDate, new Date());
+        })
 		.sort((a, b) => {
 			if (isBefore(a.publishDate, b.publishDate)) return 1;
 			if (isBefore(b.publishDate, a.publishDate)) return -1;
@@ -66,8 +72,8 @@ import hero_image from '../assets/images/justahint-hero.webp'
 						We help honest players get unstuck, with daily hints for your favourite games.
 					</p>
 					<div class="hero-btns__container"> <!-- TODO make this point to today's hint -->
-						<Button href="/blog" customIcon
-							>See Today's Hints
+						<Button href="/blog" customIcon>
+							See Today's Hints
 				<Fragment slot="icon">
 				  <Icon name="ic:baseline-chevron-right"/>
 				</Fragment>

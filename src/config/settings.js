@@ -2,7 +2,7 @@
 
 export default {
 	title: `Just a Hint`,
-	description: `Daily Hints for your favourite word games.`, // RRSS
+	description: `Daily Wordle Hints for Honest Players.`, // RRSS
 	url: `https://justahint.co`, // No trailing slash!
 	name: `Just a Hint`, // RRSS: The short name of the business or brand name. Used for things like the copyright in the footer.
   enableThemeSwitcher: false,
