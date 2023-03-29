@@ -1,7 +1,12 @@
 // ./functions/createWordleHint.js
 const { Octokit } = require("@octokit/rest");
 const axios = require("axios");
-const openai = require("openai");
+const { Configuration, OpenAIApi } = require("openai");
+
+const openaiApiKey = process.env.OPENAI_API_KEY;
+const openaiConfig = new Configuration({ apiKey: openaiApiKey });
+const openai = new OpenAIApi(openaiConfig);
+
 
 exports.handler = async (event, context) => {
     try {
@@ -75,17 +80,17 @@ exports.handler = async (event, context) => {
 
 // This function calls the ChatGPT API with the Wordle answer and returns a hint
 async function getHintFromChatGPT(word) {
-  openai.apiKey = process.env.OPENAI_API_KEY;
-
-  const prompt = `Write a hint for the Wordle word: ${word}`;
-  const response = await openai.Completion.create({
-    engine: "davinci-codex",
-    prompt: prompt,
-    max_tokens: 50,
-    n: 1,
-    stop: null,
-    temperature: 0.7,
-  });
-
-  return response.choices[0].text.trim();
+    const prompt = `Write a hint for the Wordle word: ${word}`;
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: prompt,
+      max_tokens: 50,
+      n: 1,
+      stop: null,
+      temperature: 0.7,
+    });
+  
+    return response.choices[0].text.trim();
+  }
+  
 }
