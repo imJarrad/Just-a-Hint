@@ -80,15 +80,26 @@ exports.handler = async (event, context) => {
 
 // This function calls the ChatGPT API with the Wordle answer and returns a hint
 async function getHintFromChatGPT(word) {
-    const prompt = `Write a hint for the Wordle word: ${word}`;
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: prompt,
-      max_tokens: 50,
-      n: 1,
-      stop: null,
-      temperature: 0.7,
-    });
+    try {
+      const prompt = `Write a hint for the Wordle word: ${word}`;
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: prompt,
+        max_tokens: 50,
+        n: 1,
+        stop: null,
+        temperature: 0.7,
+      });
   
-    return response.choices[0].text.trim();
+      if (response.choices && response.choices.length > 0) {
+        return response.choices[0].text.trim();
+      } else {
+        console.error("Error: No choices found in the API response:", response);
+        throw new Error("No choices found in the API response");
+      }
+    } catch (error) {
+      console.error("Error calling OpenAI API:", error);
+      throw error;
+    }
   }
+  
