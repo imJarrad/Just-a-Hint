@@ -45,8 +45,8 @@ exports.handler = async (event, context) => {
 
     // Create the .mdx file in the GitHub repository
     await octokit.repos.createOrUpdateFileContents({
-      owner: imJarrad,
-      repo: Just-a-Hint,
+      owner: repoOwner,
+      repo: repoName,
       path: `_posts/${fileName}`,
       message: `Add Wordle hint for ${formattedDate}`,
       content: Buffer.from(fileContents).toString("base64"),
