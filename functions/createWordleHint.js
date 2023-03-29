@@ -92,5 +92,3 @@ async function getHintFromChatGPT(word) {
   
     return response.choices[0].text.trim();
   }
-  
-}
