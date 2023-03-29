@@ -95,7 +95,7 @@ async function getHintFromChatGPT(word) {
         return response.choices[0].text.trim();
       } else {
         console.error("Error: No choices found in the API response:", response);
-        console.log("Choices array content:", response.choices); // Log the content of the choices array
+        console.log("Choices array content:", response.data.choices); // Log the content of the choices array
         throw new Error("No choices found in the API response");
       }
     } catch (error) {
