@@ -33,7 +33,10 @@ exports.handler = async (event, context) => {
   
       // Create the contents of the .mdx file
       // Generate the file name based on today's date and the .mdx extension
-      const fileName = `${formattedDate}-wordle-hint.mdx`;
+        const month = date.toLocaleString('default', { month: 'long' });
+        const day = date.getDate();
+        const fileName = `Wordle hint - ${month} ${day}.mdx`;
+
   
       // Assemble the file contents using the hint and the date
       const fileContents = 
@@ -52,7 +55,7 @@ exports.handler = async (event, context) => {
     await octokit.repos.createOrUpdateFileContents({
       owner: repoOwner,
       repo: repoName,
-      path: `_posts/${fileName}`,
+      path: `src/pages/blog/posts/${fileName}`,
       message: `Add Wordle hint for ${formattedDate}`,
       content: Buffer.from(fileContents).toString("base64"),
       committer: {

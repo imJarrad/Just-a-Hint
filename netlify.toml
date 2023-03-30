@@ -3,3 +3,10 @@
   publish = "dist/"
   command = "npm run build"
   functions = 'functions'
+
+[dev]
+  framework = "astro"
+  base = ""
+  publish = "dist/"
+  command = "npm run dev"
+  functions = 'functions'
