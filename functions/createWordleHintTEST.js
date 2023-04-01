@@ -1,116 +1,80 @@
+const { Octokit } = require("@octokit/core");
+const { Base64 } = require("js-base64");
 const axios = require("axios");
-const { Octokit } = require("@octokit/rest");
+
+const octokit = new Octokit({ auth: process.env.GITHUB_API_KEY });
+
+const repoOwner = "imJarrad";
+const repoName = "Just-a-Hint";
 
 // Function to check if a file exists for the given date
-async function checkFileExists(octokit, repoOwner, repoName, date) {
-    try {
-      const response = await octokit.repos.getContent({
-        owner: repoOwner,
-        repo: repoName,
-        path: `src/pages/blog/posts/Wordle hint - ${date}.mdx`,
-      });
-      return response.status === 200;
-    } catch (error) {
-      if (error.status === 404) {
-        return false;
-      }
-      console.error("Error checking file existence:", error);
-      console.error("Error object:", error);
+async function checkFileExists(date) {
+  try {
+    const fileData = await octokit.repos.getContent({
+      owner: repoOwner,
+      repo: repoName,
+      path: `src/pages/blog/posts/Wordle_hint_${date}.mdx`,
+    });
+
+    return fileData.data;
+  } catch (error) {
+    if (error.status === 404) {
+      return null;
+    } else {
+      console.error("Error fetching file data:", error);
       throw error;
     }
-  }
-  
-
-
-// Call the Wordle API to get the answer for the given date
-async function fetchWordleSolution(date) {
-  try {
-    const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${date}.json`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching Wordle data:", error);
-    throw error;
   }
 }
 
- 
-// Function to create a new post with the Wordle solution
-async function createPost(octokit, repoOwner, repoName, date, wordleSolution) {
+// Call the Wordle API to get the answer for the given date
+async function getWordleSolution(date) {
     try {
-      const hintFileContent = `---
-  title: "Wordle hint - ${date}"
-  ---
-  
-  ${wordleSolution}
-  `;
-  
-      const base64Content = Buffer.from(hintFileContent).toString("base64");
-  
-      await octokit.repos.createOrUpdateFileContents({
-        owner: repoOwner,
-        repo: repoName,
-        path: `src/pages/blog/posts/Wordle hint - ${date}.mdx`,
-        message: `Add Wordle hint for ${date}`,
-        content: base64Content,
-        committer: {
-          name: "imJarrad",
-          email: "jarradmclean@gmail.com",
-        },
-        author: {
-          name: "imJarrad",
-          email: "jarradmclean@gmail.com",
-        },
-      });
-  
-      console.log(`Created post for ${date} with Wordle solution: ${wordleSolution}`);
+      const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${date}.json`);
+      return response.data;
     } catch (error) {
-      console.error("Error creating post:", error);
+      console.error("Error fetching Wordle data:", error);
       throw error;
     }
   }
 
+// Function to create a new post with the Wordle solution
+async function createPost(date, solution) {
+  const content = `---\ntitle: "Wordle hint - ${date}"\n---\n\n${solution}`;
+  const base64Content = Base64.encode(content);
 
-exports.handler = async (event, context) => {
-  try {
-    // Initialize Octokit with GitHub access token
-    const accessToken = process.env.GITHUB_ACCESS_TOKEN;
-    const octokit = new Octokit({ auth: accessToken });
+  await octokit.repos.createOrUpdateFileContents({
+    owner: repoOwner,
+    repo: repoName,
+    path: `src/pages/blog/posts/Wordle_hint_${date}.mdx`,
+    message: `Add Wordle hint for ${date}`,
+    content: base64Content,
+    committer: {
+      name: "imJarrad",
+      email: "jarradmclean@gmail.com",
+    },
+    author: {
+      name: "imJarrad",
+      email: "jarradmclean@gmail.com",
+    },
+  });
+}
 
-    // Repository owner and name
-    const repoOwner = "imJarrad";
-    const repoName = "Just-a-Hint";
 
-    // Get today's date in ISO format
-    const today = new Date().toISOString().slice(0, 10);
+// Tie it all together
+exports.handler = async function () {
+  const date = new Date().toISOString().slice(0, 10);
+  const fileExists = await checkFileExists(date);
 
-    // Check if the file exists for today's date
-    const fileExists = await checkFileExists(octokit, repoOwner, repoName, today);
+  if (fileExists) {
+    console.log("File already exists.");
+  } else {
+    const wordleSolution = await getWordleSolution(date);
 
-    // If the file does not exist, fetch Wordle solution for today's date
-    if (!fileExists) {
-      const wordleSolution = await fetchWordleSolution(today);
-      console.log("Wordle solution fetched:", wordleSolution);
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: "Wordle solution fetched",
-          wordleSolution: wordleSolution,
-        }),
-      };
+    if (!wordleSolution) {
+      console.log(`No Wordle solution for ${date}`);
     } else {
-      console.log("File for today's date already exists");
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: "File for today's date already exists",
-        }),
-      };
+      await createPost(date, wordleSolution);
     }
-  } catch (error) {
-    console.error("Error in main function:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-    };
   }
 };
