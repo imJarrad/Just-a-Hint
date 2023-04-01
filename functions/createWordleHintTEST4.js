@@ -1,19 +1,27 @@
+// createWordleHint.js
 const axios = require("axios");
 const { Base64 } = require("js-base64");
 const { Octokit } = require("@octokit/rest");
-const date = new Date().toISOString().split("T")[0];
 
+const token = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
+const openaiApiKey = process.env.OPENAI_API_KEY;
 const repoOwner = "imJarrad";
 const repoName = "Just-a-Hint";
-const filePath = `src/pages/blog/posts/Wordle_hint_${date}.mdx`;
-const token = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
 
 const octokit = new Octokit({
   auth: token,
 });
 
+const { OpenAIApi, Configuration } = require("openai");
+const openaiConfig = new Configuration({ apiKey: openaiApiKey });
+const openai = new OpenAIApi(openaiConfig);
+
+const date = new Date().toISOString().split("T")[0];
+
+const filePath = `src/pages/blog/posts/Wordle_hint_${date}.mdx`;
 
 
+// Check if file already exists
 async function checkFileExists() {
   try {
     await octokit.rest.repos.getContent({
@@ -42,6 +50,27 @@ async function fetchWordleSolution() {
   }
 }
 
+// Send prompt to GPT3.5, get a hint back
+async function getHintFromChatGPT(word) {
+  try {
+    const prompt = `Write a very ambiguous Wordle hint for the word '${word}'. Your hint should be creative, vague and at least 10 words long. If the hint is less than 8 words, rewrite it until it is at least 10 words long. Do NOT use the word '${word}'.`;
+    const response = await openai.createCompletion({
+      model: "gpt-3.5-turbo",
+      prompt: prompt,
+      max_tokens: 100,
+      n: 1,
+      stop: null,
+      temperature: 0.5,
+    });
+
+    return response.data.choices[0].text.trim();
+  } catch (error) {
+    console.error("Error getting hint from ChatGPT:", error);
+    throw error;
+  }
+}
+
+// Creates a new post in GitHub repo
 async function createPost(content) {
   try {
     const base64Content = Base64.encode(content);
@@ -59,9 +88,10 @@ async function createPost(content) {
   }
 }
 
+// Tie it all together
 exports.handler = async function (event, context) {
   
-  //Check response from checkFileExists() to see if file already exists.  
+   //Check response from checkFileExists() to see if file already exists.  
   // If it does, return 400 error and exit.
   const fileExists = await checkFileExists();
   if (fileExists) {
@@ -69,18 +99,23 @@ exports.handler = async function (event, context) {
     return { statusCode: 400, body: "File already exists." };
   }
 
-  // Fetch Wordle solution from NYTimes API
+  // Grab Wordle Solution
+  // If no solution, return 400 error and exit.
   const wordleSolution = await fetchWordleSolution();
   if (!wordleSolution || !wordleSolution.solution) {
     console.log(`No Wordle solution for ${date}`);
     return { statusCode: 400, body: `No Wordle solution for ${date}` };
   }
 
+  // Pass that solution to getHintFromChatGPT(), get a hint back
   const wordleHint = await getHintFromChatGPT(wordleSolution.solution);
   
+  // Assemble some markdown content
   const content = `---\ntitle: "Wordle Hint for ${date}"\ndate: "${date}"\n---\n\n${wordleHint}`;
   
+  // Send that content to createPost()
   await createPost(content);
 
+  // Return confirmation
   return { statusCode: 200, body: "Wordle hint post created successfully." };
 };
