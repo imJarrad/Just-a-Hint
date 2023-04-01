@@ -3,21 +3,24 @@ const { Octokit } = require("@octokit/rest");
 
 // Function to check if a file exists for the given date
 async function checkFileExists(octokit, repoOwner, repoName, date) {
-  try {
-    const response = await octokit.repos.getContent({
-      owner: repoOwner,
-      repo: repoName,
-      path: `src/pages/blog/posts/Wordle hint - ${date}.mdx`,
-    });
-    return response.status === 200;
-  } catch (error) {
-    if (error.status === 404) {
-      return false;
+    try {
+      const response = await octokit.repos.getContent({
+        owner: repoOwner,
+        repo: repoName,
+        path: `src/pages/blog/posts/Wordle hint - ${date}.mdx`,
+      });
+      return response.status === 200;
+    } catch (error) {
+      if (error.status === 404) {
+        return false;
+      }
+      console.error("Error checking file existence:", error);
+      console.error("Error object:", error);
+      throw error;
     }
-    console.error("Error checking file existence:", error);
-    throw error;
   }
-}
+  
+
 
 // Call the Wordle API to get the answer for the given date
 async function fetchWordleSolution(date) {
