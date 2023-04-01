@@ -1,8 +1,9 @@
 const { Octokit } = require("@octokit/core");
 const { Base64 } = require("js-base64");
 const axios = require("axios");
+const fs = require('fs/promises');
 
-const octokit = new Octokit({ auth: process.env.GITHUB_API_KEY });
+const octokit = new Octokit({ auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN });
 
 const repoOwner = "imJarrad";
 const repoName = "Just-a-Hint";
