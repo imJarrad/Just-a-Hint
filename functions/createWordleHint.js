@@ -23,14 +23,14 @@ async function fetchWordle(date) {
 // This function will call the OpenAI ChatGPT API to write a hint for the given word
 async function getHintFromChatGPT(word) {
   try {
-    const prompt = `Write a very ambiguous Wordle hint for the word '${word}'. Your hint should be creative, vague and at least 10 words long. If the hint is less than 8 words, rewrite it until it is at least 10 words long. Do NOT use the word '${word}'.`;
+    const prompt = `Write a hint for the Wordle word: ${word}`;
     const response = await openai.createCompletion({
-      model: "gpt-3.5-turbo",
+      model: "text-davinci-003",
       prompt: prompt,
-      max_tokens: 100,
+      max_tokens: 50,
       n: 1,
       stop: null,
-      temperature: 0.5,
+      temperature: 0.7,
     });
 
     if (response.data.choices && response.data.choices.length > 0) {
