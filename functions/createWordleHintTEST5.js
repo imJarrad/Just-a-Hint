@@ -78,7 +78,6 @@ async function getHintFromChatGPT(word){
   }
 }
 
-
 // Creates a new post in GitHub repo
 async function createPost(content) {
   try {
@@ -99,7 +98,10 @@ async function createPost(content) {
 
 // Tie it all together
 exports.handler = async function (event, context) {
+  let currentDate = new Date(date);
+  let hasSolution = true;
   
+  while (hasSolution) {
    //Check response from checkFileExists() to see if file already exists.  
   // If it does, return 400 error and exit.
   const fileExists = await checkFileExists();
@@ -109,12 +111,13 @@ exports.handler = async function (event, context) {
   }
 
   // Grab Wordle Solution
-  // If no solution, return 400 error and exit.
+  // If no solution, set hasSolution to false and exit the loop.
   const wordleSolution = await fetchWordleSolution();
-  if (!wordleSolution || !wordleSolution.solution) {
-    console.log(`No Wordle solution for ${date}`);
-    return { statusCode: 400, body: `No Wordle solution for ${date}` };
-  }
+    if (!wordleSolution || !wordleSolution.solution) {
+      console.log(`No Wordle solution for ${date}`);
+      hasSolution = false;
+      continue;
+    }
 
   // Pass that solution to getHintFromChatGPT(), get a hint back
   const wordleHint = await getHintFromChatGPT(wordleSolution.solution);
@@ -165,6 +168,12 @@ Just a Hint Team.
   
   // Send that content to createPost()
   await createPost(content);
+
+  // Increment the date by 1 day
+  currentDate.setDate(currentDate.getDate() + 1);
+  date = currentDate.toISOString().split("T")[0];
+  filePath = `src/pages/blog/posts/Wordle_hint_${date}.mdx`;
+}
 
   // Return confirmation
   return { statusCode: 200, body: "Wordle hint post created successfully." };
