@@ -18,9 +18,9 @@ const { OpenAIApi, Configuration } = require("openai");
 const openaiConfig = new Configuration({ apiKey: openaiApiKey });
 const openai = new OpenAIApi(openaiConfig);
 
-const date = new Date().toISOString().split("T")[0];
+let targetDate = new Date().toISOString().split("T")[0];
 
-const filePath = `src/pages/blog/posts/Wordle_hint_${date}.mdx`;
+const filePath = `src/pages/blog/posts/Wordle_hint_${targetDate}.mdx`;
 
 
 // Check if file already exists
@@ -44,7 +44,7 @@ async function checkFileExists() {
 // Fetch Wordle solution from NYTimes API
 async function fetchWordleSolution() {
   try {
-    const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${date}.json`);
+    const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${targetDate}.json`);
     return response.data;
   } catch (error) {
     console.error("Error fetching Wordle data:", error);
@@ -86,7 +86,7 @@ async function createPost(content) {
       owner: repoOwner,
       repo: repoName,
       path: filePath,
-      message: `Create Wordle_hint_${date}.mdx`,
+      message: `Create Wordle_hint_${targetDate}.mdx`,
       content: base64Content,
     });
     console.log(`File created: ${filePath}`);
@@ -98,7 +98,6 @@ async function createPost(content) {
 
 // Tie it all together
 exports.handler = async function (event, context) {
-  let currentDate = new Date(date);
   let hasSolution = true;
   
   while (hasSolution) {
@@ -114,7 +113,7 @@ exports.handler = async function (event, context) {
   // If no solution, set hasSolution to false and exit the loop.
   const wordleSolution = await fetchWordleSolution();
     if (!wordleSolution || !wordleSolution.solution) {
-      console.log(`No Wordle solution for ${date}`);
+      console.log(`No Wordle solution for ${targetDate}`);
       hasSolution = false;
       continue;
     }
@@ -124,13 +123,13 @@ exports.handler = async function (event, context) {
   
 
 // Assemble some markdown content
-const formattedDate = format(new Date(date), "eeee, dd MMMM yyyy");
-const publishDate = date;
+const nlDate = format(new Date(targetDate), "eeee, dd MMMM yyyy");
+const publishDate = targetDate;
 
 const content = `---
 layout: '../../../layouts/Post.astro'
-title: Wordle Hint for ${formattedDate}
-description: A Hint for the daily Wordle on ${formattedDate}
+title: Wordle Hint for ${nlDate}
+description: A Hint for the daily Wordle on ${nlDate}
 publishDate: ${publishDate}
 featuredImage: '/src/assets/images/genericwordle.webp'
 excerpt: 'Wordle Hint for Today...'
@@ -154,7 +153,7 @@ Ready?<br /><br />
 
 ----
 
-Our Hint for the Wordle on ${formattedDate}:
+Our Hint for the Wordle on ${nlDate}:
 
 **${wordleHint}**
 
@@ -171,9 +170,8 @@ Just a Hint Team.
 
 // Increment the date by 1 day
 currentDate.setDate(currentDate.getDate() + 1);
-let newDate = currentDate.toISOString().split("T")[0];
-date = newDate;
-filePath = `src/pages/blog/posts/Wordle_hint_${date}.mdx`;
+targetDate = currentDate.toISOString().split("T")[0];
+filePath = `src/pages/blog/posts/Wordle_hint_${targetDate}.mdx`;
 }
 
   // Return confirmation
