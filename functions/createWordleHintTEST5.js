@@ -50,31 +50,31 @@ async function fetchWordleSolution() {
   }
 }
 
-// Send prompt to GPT3.5, get a hint back
-async function getHintFromChatGPT(word) {
+// Send prompt to GPT3, get a hint back
+async function getHintFromChatGPT(word){
   try {
-    const messages = [
-      {
-        role: "user",
-        text: `Write a very ambiguous Wordle hint for the word '${word}'. Your hint should be creative, vague and at least 10 words long. If the hint is less than 8 words, rewrite it until it is at least 10 words long. Do NOT use the word '${word}'.`,
-      },
-    ];
-    const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: messages,
-      max_tokens: 100,
+    const prompt = `Write a very ambiguous Wordle hint for the word '${word}'. Your hint should be creative, vague and at least 10 words long. If the hint is less than 8 words, rewrite it until it is at least 10 words long. Do NOT use the word '${word}'.`;
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: prompt,
+      max_tokens: 5100,
       n: 1,
       stop: null,
-      temperature: 0.5,
+      temperature: 0.7,
     });
 
-    return response.data.choices[0].text.trim();
+    if (response.data.choices && response.data.choices.length > 0) {
+      return response.data.choices[0].text.trim();
+    } else {
+      console.error("Error: No choices found in the API response:", response);
+      console.log("Choices array content:", response.data.choices); // Log the content of the choices array
+      throw new Error("No choices found in the API response");
+    }
   } catch (error) {
-    console.error("Error getting hint from ChatGPT:", error);
+    console.error("Error calling OpenAI API:", error);
     throw error;
   }
 }
-
 
 
 // Creates a new post in GitHub repo
