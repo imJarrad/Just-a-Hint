@@ -169,10 +169,11 @@ Just a Hint Team.
   // Send that content to createPost()
   await createPost(content);
 
-  // Increment the date by 1 day
-  currentDate.setDate(currentDate.getDate() + 1);
-  date = currentDate.toISOString().split("T")[0];
-  filePath = `src/pages/blog/posts/Wordle_hint_${date}.mdx`;
+// Increment the date by 1 day
+currentDate.setDate(currentDate.getDate() + 1);
+let newDate = currentDate.toISOString().split("T")[0];
+date = newDate;
+filePath = `src/pages/blog/posts/Wordle_hint_${date}.mdx`;
 }
 
   // Return confirmation
