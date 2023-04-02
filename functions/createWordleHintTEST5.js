@@ -2,6 +2,8 @@
 const axios = require("axios");
 const { Base64 } = require("js-base64");
 const { Octokit } = require("@octokit/rest");
+const { format } = require("date-fns");
+
 
 const token = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
 const openaiApiKey = process.env.OPENAI_API_KEY;
@@ -117,8 +119,49 @@ exports.handler = async function (event, context) {
   // Pass that solution to getHintFromChatGPT(), get a hint back
   const wordleHint = await getHintFromChatGPT(wordleSolution.solution);
   
-  // Assemble some markdown content
-  const content = `---\ntitle: "Wordle Hint for ${date}"\ndate: "${date}"\n---\n\n${wordleHint}`;
+
+// Assemble some markdown content
+const formattedDate = format(new Date(date), "eeee, dd MMMM yyyy");
+const publishDate = date;
+
+const content = `---
+layout: '../../../layouts/Post.astro'
+title: Wordle Hint for ${formattedDate}
+description: A Hint for the daily Wordle on ${formattedDate}
+publishDate: ${publishDate}
+featuredImage: '/src/assets/images/genericwordle.webp'
+excerpt: 'Wordle Hint for Today...'
+tags: ['Wordle Hint']
+---
+
+We get it, you’ve been up since the crack of dawn. You’re staring at your screen, trying desperately to get that coveted green row of letters. 
+
+What the heck could it be!??
+I’ve normally figured it out by now!
+I can’t let Aunty Margaret beat me again… 
+
+You’ve pored over dictionaries, thesauruses, and even that weird, dusty Scrabble book your Grandma had.
+
+And STILL, you just can’t get it. 
+
+Well, we have the answer, and we’re you’re friends, so we wrote you a hint for today’s Wordle.
+Not the answer! just a hint. 
+
+Ready?<br /><br />
+
+----
+
+Our Hint for the Wordle on ${formattedDate}:
+
+**${wordleHint}**
+
+----
+
+Ok, we'll see you again tomorrow, 
+
+Just a Hint Team.
+`;
+
   
   // Send that content to createPost()
   await createPost(content);
