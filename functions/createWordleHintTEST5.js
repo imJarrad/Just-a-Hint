@@ -57,7 +57,7 @@ async function getHintFromChatGPT(word){
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
-      max_tokens: 5100,
+      max_tokens: 100,
       n: 1,
       stop: null,
       temperature: 0.7,
