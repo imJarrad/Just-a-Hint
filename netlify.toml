@@ -3,6 +3,7 @@
   publish = "dist/"
   command = "npm run build"
   functions = 'functions'
+  
 
 [dev]
   framework = "astro"
@@ -10,3 +11,7 @@
   publish = "dist/"
   command = "npm run dev"
   functions = 'functions'
+
+  [functions]
+  createWordleHint = "functions/createWordleHint.js"
+  timeout = 30 # Set the timeout to 30 seconds
