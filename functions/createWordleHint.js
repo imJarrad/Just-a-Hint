@@ -103,13 +103,20 @@ exports.handler = async function (event, context) {
   let hasSolution = true;
   
   while (hasSolution) {
-   //Check response from checkFileExists() to see if file already exists.  
-  // If it does, return 400 error and exit.
-  const fileExists = await checkFileExists();
-  if (fileExists) {
-    console.log("File already exists.");
-    return { statusCode: 400, body: "File already exists." };
-  }
+    // Check response from checkFileExists() to see if file already exists.  
+    const fileExists = await checkFileExists();
+    if (fileExists) {
+      console.log("File already exists.");
+
+      // Increment the date by 1 day
+      targetDate.setDate(targetDate.getDate() + 1);
+      targetDateString = targetDate.toISOString().split("T")[0];
+      filePath = `src/pages/blog/posts/Wordle_hint_${targetDateString}.mdx`;
+
+      // Continue to the next iteration of the loop
+      continue;
+    }
+
 
   // Grab Wordle Solution
   // If no solution, set hasSolution to false and exit the loop.
