@@ -13,5 +13,5 @@
   functions = 'functions'
 
   [functions]
-  createWordleHint = "functions/createWordleHint.js"
-  timeout = 30 # Set the timeout to 30 seconds
+    [functions.createWordleHint]
+    timeout = 30 # Set the timeout to 30 seconds
