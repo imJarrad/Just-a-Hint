@@ -57,11 +57,11 @@ async function fetchWordleSolution() {
 // Send prompt to GPT3, get a hint back
 async function getHintFromChatGPT(word){
   try {
-    const prompt = `Write a very ambiguous Wordle hint for the word '${word}'. Your hint should be creative, vague and at least 10 words long. If the hint is less than 8 words, rewrite it until it is at least 10 words long. Do NOT use the word '${word}'.`;
+    const prompt = `In one sentence, write an ambiguous Wordle hint for the word '${word}'. Make it vague, and fun, and do not include the word '${word}'.`;
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
-      max_tokens: 100,
+      max_tokens: 70,
       n: 1,
       stop: null,
       temperature: 0.7,
