@@ -159,13 +159,13 @@ exports.handler = async function (event, context) {
 
   Ready?<br /><br />
 
-  ----
+  ***
 
   Our Hint for the Wordle on ${nlDate}:
 
   **${wordleHint}**
 
-  ----
+  ***
 
   Ok, we'll see you again tomorrow, 
 
