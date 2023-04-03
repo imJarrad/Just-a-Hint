@@ -161,7 +161,7 @@ exports.handler = async function (event, context) {
 
   Ready?<br /><br />
 
-  Our Hint for the Wordle on ${nlDate}:
+  Our Hint for the Wordle on ${nlDate}\:
 
   **${wordleHint}**
 
