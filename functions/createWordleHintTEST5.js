@@ -19,7 +19,7 @@ const openaiConfig = new Configuration({ apiKey: openaiApiKey });
 const openai = new OpenAIApi(openaiConfig);
 
 let targetDate = new Date()
-let targetDateString = new targetDate.toISOString().split("T")[0];
+let targetDateString = targetDate.toISOString().split("T")[0];
 
 
 const filePath = `src/pages/blog/posts/Wordle_hint_${targetDateString}.mdx`;
