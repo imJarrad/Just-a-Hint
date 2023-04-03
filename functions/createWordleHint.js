@@ -135,8 +135,7 @@ exports.handler = async function (event, context) {
   let nlDate = format(targetDate, "eeee, dd MMMM yyyy");
 
   const content = 
-  `
----
+  `---
   layout: '../../../layouts/Post.astro'
   title: Wordle Hint for ${nlDate}
   description: A Hint for the daily Wordle on ${nlDate}
