@@ -18,9 +18,11 @@ const { OpenAIApi, Configuration } = require("openai");
 const openaiConfig = new Configuration({ apiKey: openaiApiKey });
 const openai = new OpenAIApi(openaiConfig);
 
-let targetDate = new Date().toISOString().split("T")[0];
+let targetDate = new Date()
+let targetDateString = new targetDate.toISOString().split("T")[0];
 
-const filePath = `src/pages/blog/posts/Wordle_hint_${targetDate}.mdx`;
+
+const filePath = `src/pages/blog/posts/Wordle_hint_${targetDateString}.mdx`;
 
 
 // Check if file already exists
@@ -44,7 +46,7 @@ async function checkFileExists() {
 // Fetch Wordle solution from NYTimes API
 async function fetchWordleSolution() {
   try {
-    const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${targetDate}.json`);
+    const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${targetDateString}.json`);
     return response.data;
   } catch (error) {
     console.error("Error fetching Wordle data:", error);
@@ -86,7 +88,7 @@ async function createPost(content) {
       owner: repoOwner,
       repo: repoName,
       path: filePath,
-      message: `Create Wordle_hint_${targetDate}.mdx`,
+      message: `Create Wordle_hint_${targetDateString}.mdx`,
       content: base64Content,
     });
     console.log(`File created: ${filePath}`);
@@ -113,7 +115,7 @@ exports.handler = async function (event, context) {
   // If no solution, set hasSolution to false and exit the loop.
   const wordleSolution = await fetchWordleSolution();
     if (!wordleSolution || !wordleSolution.solution) {
-      console.log(`No Wordle solution for ${targetDate}`);
+      console.log(`No Wordle solution for ${targetDateString}`);
       hasSolution = false;
       continue;
     }
@@ -123,14 +125,13 @@ exports.handler = async function (event, context) {
   
 
 // Assemble some markdown content
-const nlDate = format(new Date(targetDate), "eeee, dd MMMM yyyy");
-const publishDate = targetDate;
+const nlDate = format(new Date(targetDateString), "eeee, dd MMMM yyyy");
 
 const content = `---
 layout: '../../../layouts/Post.astro'
 title: Wordle Hint for ${nlDate}
 description: A Hint for the daily Wordle on ${nlDate}
-publishDate: ${publishDate}
+publishDate: ${targetDateString}
 featuredImage: '/src/assets/images/genericwordle.webp'
 excerpt: 'Wordle Hint for Today...'
 tags: ['Wordle Hint']
@@ -168,11 +169,11 @@ Just a Hint Team.
   // Send that content to createPost()
   await createPost(content);
 
-// Increment the date by 1 day
-currentDate.setDate(currentDate.getDate() + 1);
-targetDate = currentDate.toISOString().split("T")[0];
-filePath = `src/pages/blog/posts/Wordle_hint_${targetDate}.mdx`;
-}
+    // Increment the date by 1 day
+    targetDate.setDate(targetDate.getDate() + 1);
+    const targetDateString = targetDate.toISOString().split("T")[0];
+    filePath = `src/pages/blog/posts/Wordle_hint_${targetDateString}.mdx`;
+  }
 
   // Return confirmation
   return { statusCode: 200, body: "Wordle hint post created successfully." };
