@@ -19,6 +19,8 @@ const seo = {
 	image: featuredImage,
 };
 
+// RRSS Can't figure out images, so I'm using a generic one on all posts for now.
+import wordleHintImage from '/src/assets/images/genericwordle.webp'
 
 ---
 <Layout seo={seo}> 
@@ -45,7 +47,12 @@ const seo = {
         </em>
       </time>
     </p>
-    {featuredImage && <img class="post-layout__img" src={featuredImage} alt={title} />}
+    <!-- {featuredImage && <img class="post-layout__img" src={featuredImage} alt={title} />} -->
+    <!-- RRSS: Generic image implementation -->
+    <image 
+					src={wordleHintImage.src}
+					alt={`Wordle Hint for ${publishDate}.`}
+				/>
   </div>
   <Container narrow>  
     <article id="article">
