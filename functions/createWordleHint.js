@@ -136,7 +136,7 @@ exports.handler = async function (event, context) {
 
   const content = 
   `
-  ---
+---
   layout: '../../../layouts/Post.astro'
   title: Wordle Hint for ${nlDate}
   description: A Hint for the daily Wordle on ${nlDate}
@@ -144,7 +144,7 @@ exports.handler = async function (event, context) {
   featuredImage: '/src/assets/images/genericwordle.webp'
   excerpt: 'Wordle Hint for Today...'
   tags: ['Wordle Hint']
-  ---
+---
 
   We get it, you’ve been up since the crack of dawn. You’re staring at your screen, trying desperately to get that coveted green row of letters. 
 
