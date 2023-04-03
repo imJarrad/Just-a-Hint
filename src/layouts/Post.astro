@@ -34,7 +34,16 @@ const seo = {
     </ul>
     <h1>{title}</h1>
     <p class="post-layout__date">
-      <time><em>{publishDate}</em></time>
+      <time>
+        <em>
+          {new Date(publishDate).toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </em>
+      </time>
     </p>
     {featuredImage && <img class="post-layout__img" src={featuredImage} alt={title} />}
   </div>
