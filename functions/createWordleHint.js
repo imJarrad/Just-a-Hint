@@ -131,46 +131,46 @@ exports.handler = async function (event, context) {
   const wordleHint = await getHintFromChatGPT(wordleSolution.solution);
   
 
-// Assemble some markdown content
-const nlDate = format(new Date(targetDateString), "eeee, dd MMMM yyyy");
+  // Assemble some markdown content
+  let nlDate = format(targetDate, "eeee, dd MMMM yyyy");
 
-const content = `---
-layout: '../../../layouts/Post.astro'
-title: Wordle Hint for ${nlDate}
-description: A Hint for the daily Wordle on ${nlDate}
-publishDate: ${targetDateString}
-featuredImage: '/src/assets/images/genericwordle.webp'
-excerpt: 'Wordle Hint for Today...'
-tags: ['Wordle Hint']
----
+  const content = `---
+  layout: '../../../layouts/Post.astro'
+  title: Wordle Hint for ${nlDate}
+  description: A Hint for the daily Wordle on ${nlDate}
+  publishDate: ${targetDateString}
+  featuredImage: '/src/assets/images/genericwordle.webp'
+  excerpt: 'Wordle Hint for Today...'
+  tags: ['Wordle Hint']
+  ---
 
-We get it, you’ve been up since the crack of dawn. You’re staring at your screen, trying desperately to get that coveted green row of letters. 
+  We get it, you’ve been up since the crack of dawn. You’re staring at your screen, trying desperately to get that coveted green row of letters. 
 
-What the heck could it be!??
-I’ve normally figured it out by now!
-I can’t let Aunty Margaret beat me again… 
+  What the heck could it be!??
+  I’ve normally figured it out by now!
+  I can’t let Aunty Margaret beat me again… 
 
-You’ve pored over dictionaries, thesauruses, and even that weird, dusty Scrabble book your Grandma had.
+  You’ve pored over dictionaries, thesauruses, and even that weird, dusty Scrabble book your Grandma had.
 
-And STILL, you just can’t get it. 
+  And STILL, you just can’t get it. 
 
-Well, we have the answer, and we’re you’re friends, so we wrote you a hint for today’s Wordle.
-Not the answer! just a hint. 
+  Well, we have the answer, and we’re you’re friends, so we wrote you a hint for today’s Wordle.
+  Not the answer! just a hint. 
 
-Ready?<br /><br />
+  Ready?<br /><br />
 
-----
+  ----
 
-Our Hint for the Wordle on ${nlDate}:
+  Our Hint for the Wordle on ${nlDate}:
 
-**${wordleHint}**
+  **${wordleHint}**
 
-----
+  ----
 
-Ok, we'll see you again tomorrow, 
+  Ok, we'll see you again tomorrow, 
 
-Just a Hint Team.
-`;
+  Just a Hint Team.
+  `;
 
   
   // Send that content to createPost()
