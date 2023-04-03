@@ -1,18 +1,52 @@
-// ./functions/createWordleHint.js
-const { Octokit } = require("@octokit/rest");
+// createWordleHint.js
 const axios = require("axios");
-const { Configuration, OpenAIApi } = require("openai");
+const { Base64 } = require("js-base64");
+const { Octokit } = require("@octokit/rest");
+const { format } = require("date-fns");
 
+
+const token = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
 const openaiApiKey = process.env.OPENAI_API_KEY;
+const repoOwner = "imJarrad";
+const repoName = "Just-a-Hint";
+
+const octokit = new Octokit({
+  auth: token,
+});
+
+const { OpenAIApi, Configuration } = require("openai");
 const openaiConfig = new Configuration({ apiKey: openaiApiKey });
 const openai = new OpenAIApi(openaiConfig);
 
+let targetDate = new Date()
+let targetDateString = targetDate.toISOString().split("T")[0];
 
 
-// This function will call the Wordle API to get the answer for the given date
-async function fetchWordle(date) {
+let filePath = `src/pages/blog/posts/Wordle_hint_${targetDateString}.mdx`;
+
+
+// Check if file already exists
+async function checkFileExists() {
   try {
-    const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${date.toISOString().slice(0, 10)}.json`);
+    await octokit.rest.repos.getContent({
+      owner: repoOwner,
+      repo: repoName,
+      path: filePath,
+    });
+    return true;
+  } catch (error) {
+    if (error.status === 404) {
+      return false;
+    }
+    console.error("Error checking file existence:", error);
+    throw error;
+  }
+}
+
+// Fetch Wordle solution from NYTimes API
+async function fetchWordleSolution() {
+  try {
+    const response = await axios.get(`https://www.nytimes.com/svc/wordle/v2/${targetDateString}.json`);
     return response.data;
   } catch (error) {
     console.error("Error fetching Wordle data:", error);
@@ -20,14 +54,14 @@ async function fetchWordle(date) {
   }
 }
 
-// This function will call the OpenAI ChatGPT API to write a hint for the given word
-async function getHintFromChatGPT(word) {
+// Send prompt to GPT3, get a hint back
+async function getHintFromChatGPT(word){
   try {
-    const prompt = `Write a hint for the Wordle word: ${word}`;
+    const prompt = `Write a very ambiguous Wordle hint for the word '${word}'. Your hint should be creative, vague and at least 10 words long. If the hint is less than 8 words, rewrite it until it is at least 10 words long. Do NOT use the word '${word}'.`;
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
-      max_tokens: 50,
+      max_tokens: 100,
       n: 1,
       stop: null,
       temperature: 0.7,
@@ -46,82 +80,101 @@ async function getHintFromChatGPT(word) {
   }
 }
 
-// This function will assemble the content for the new hint file
-function createHintFileContent(date, hint) {
-  const dateString = date.toISOString().slice(0, 10);
-  return `---
-title: Wordle Hint for ${dateString}
-date: ${dateString}
----
-
-# Wordle Hint for ${dateString}
-
-Here's a hint to help you solve today's Wordle: **${hint}**`;
-}
-
-// This is the main function that calls the other little async functions
-// It grabs the list of existing hints, finds the next date without a hint, and then calls the Wordle API to get the answer
-// Then it calls the ChatGPT API to write a hint, and it creates a new .mdx file with the hint
-exports.handler = async (event) => {
+// Creates a new post in GitHub repo
+async function createPost(content) {
   try {
-    const accessToken = process.env.GITHUB_ACCESS_TOKEN;
-    const octokit = new Octokit({ auth: accessToken });
-
-    const repoOwner = "imJarrad";
-    const repoName = "Just-a-Hint";
-
-    const existingHints = await getExistingHints(octokit, repoOwner, repoName);
-
-    const currentDate = new Date();
-    let nextDate = new Date(currentDate);
-    let foundDate = false;
-
-    while (!foundDate) {
-      nextDate.setDate(nextDate.getDate() + 1);
-      if (!existingHints.includes(`Wordle hint - ${nextDate.toISOString().slice(0, 10)}.mdx`)) {
-        foundDate = true;
-      }
-    }
-
-    const wordleResponse = await fetchWordle(nextDate);
-    if (wordleResponse.status === "ERROR") {
-      throw new Error("Wordle API returned an error: " + JSON.stringify(wordleResponse));
-    }
-    
-    const hint = await getHintFromChatGPT(wordleResponse.solution);
-     
-
-    const hintFileContent = createHintFileContent(nextDate, hint);
-    const base64Content = Buffer.from(hintFileContent).toString("base64");
-
-    const commitResponse = await octokit.repos.createOrUpdateFileContents({
+    const base64Content = Base64.encode(content);
+    await octokit.rest.repos.createOrUpdateFileContents({
       owner: repoOwner,
       repo: repoName,
-      path: `src/pages/blog/posts/Wordle hint - ${nextDate.toLocaleString('default', { month: 'long' })} ${nextDate.getDate()}.mdx`,
-      message: `Add Wordle hint for ${nextDate.toISOString().slice(0, 10)}`,
+      path: filePath,
+      message: `Create Wordle_hint_${targetDateString}.mdx`,
       content: base64Content,
-      committer: {
-        name: "imJarrad",
-        email: "jarradmclean@gmail.com",
-      },
-      author: {
-        name: "imJarrad",
-        email: "jarradmclean@gmail.com",
-      },
     });
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: "Hint file created successfully",
-        hintDate: nextDate.toISOString().slice(0, 10),
-      }),
-    };
+    console.log(`File created: ${filePath}`);
   } catch (error) {
-    console.error("Error creating file:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-    };
+    console.error("Error creating post:", error);
+    throw error;
   }
+}
+
+// Tie it all together
+exports.handler = async function (event, context) {
+  let hasSolution = true;
+  
+  while (hasSolution) {
+   //Check response from checkFileExists() to see if file already exists.  
+  // If it does, return 400 error and exit.
+  const fileExists = await checkFileExists();
+  if (fileExists) {
+    console.log("File already exists.");
+    return { statusCode: 400, body: "File already exists." };
+  }
+
+  // Grab Wordle Solution
+  // If no solution, set hasSolution to false and exit the loop.
+  const wordleSolution = await fetchWordleSolution();
+    if (!wordleSolution || !wordleSolution.solution) {
+      console.log(`No Wordle solution for ${targetDateString}`);
+      hasSolution = false;
+      continue;
+    }
+
+  // Pass that solution to getHintFromChatGPT(), get a hint back
+  const wordleHint = await getHintFromChatGPT(wordleSolution.solution);
+  
+
+// Assemble some markdown content
+const nlDate = format(new Date(targetDateString), "eeee, dd MMMM yyyy");
+
+const content = `---
+layout: '../../../layouts/Post.astro'
+title: Wordle Hint for ${nlDate}
+description: A Hint for the daily Wordle on ${nlDate}
+publishDate: ${targetDateString}
+featuredImage: '/src/assets/images/genericwordle.webp'
+excerpt: 'Wordle Hint for Today...'
+tags: ['Wordle Hint']
+---
+
+We get it, you’ve been up since the crack of dawn. You’re staring at your screen, trying desperately to get that coveted green row of letters. 
+
+What the heck could it be!??
+I’ve normally figured it out by now!
+I can’t let Aunty Margaret beat me again… 
+
+You’ve pored over dictionaries, thesauruses, and even that weird, dusty Scrabble book your Grandma had.
+
+And STILL, you just can’t get it. 
+
+Well, we have the answer, and we’re you’re friends, so we wrote you a hint for today’s Wordle.
+Not the answer! just a hint. 
+
+Ready?<br /><br />
+
+----
+
+Our Hint for the Wordle on ${nlDate}:
+
+**${wordleHint}**
+
+----
+
+Ok, we'll see you again tomorrow, 
+
+Just a Hint Team.
+`;
+
+  
+  // Send that content to createPost()
+  await createPost(content);
+
+    // Increment the date by 1 day
+    targetDate.setDate(targetDate.getDate() + 1);
+    targetDateString = targetDate.toISOString().split("T")[0];
+    filePath = `src/pages/blog/posts/Wordle_hint_${targetDateString}.mdx`;
+  }
+
+  // Return confirmation
+  return { statusCode: 200, body: "Wordle hint post created successfully." };
 };
