@@ -171,7 +171,7 @@ Just a Hint Team.
 
     // Increment the date by 1 day
     targetDate.setDate(targetDate.getDate() + 1);
-    const targetDateString = targetDate.toISOString().split("T")[0];
+    targetDateString = targetDate.toISOString().split("T")[0];
     filePath = `src/pages/blog/posts/Wordle_hint_${targetDateString}.mdx`;
   }
 
