@@ -3,7 +3,7 @@ const axios = require("axios");
 const { Base64 } = require("js-base64");
 const { Octokit } = require("@octokit/rest");
 const { format } = require("date-fns");
-
+const { schedule } = require("@netlify/functions");
 
 const token = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
 const openaiApiKey = process.env.OPENAI_API_KEY;
@@ -99,7 +99,7 @@ async function createPost(content) {
 }
 
 // Tie it all together
-exports.handler = async function (event, context) {
+exports.handler = schedule("@daily", async function (event, context) {
   let hasSolution = true;
   
   while (hasSolution) {
@@ -181,4 +181,4 @@ exports.handler = async function (event, context) {
 
   // Return confirmation
   return { statusCode: 200, body: "Wordle hint post created successfully." };
-};
+});
