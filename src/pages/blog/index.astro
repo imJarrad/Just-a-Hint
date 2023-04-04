@@ -7,7 +7,7 @@ import {
 } from '@littlesticks/odyssey-theme-components';
 import Layout from '../../layouts/Page.astro';
 import NewsletterForm from '../../components/forms/NewsletterForm.astro';
-import BlogPostsList from '../components/blog/BlogPostsList.astro';
+import BlogPostsList from '../../components/blog/BlogPostsList.astro';
 
 const posts = await Astro.glob('./posts/*.mdx').then(posts =>
     posts
