@@ -10,14 +10,14 @@ import {
   StickyTextImageSection,
   CtaCardSection,
 	// TextCardSection,
-BlogPostsList,
+// BlogPostsList, gotta import my own version, until this supports new astro image support
 } from '@littlesticks/odyssey-theme-components';
 import Layout from '../layouts/Page.astro';
 // import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
 import { parse, isBefore, endOfToday } from 'date-fns';
 // import NewsletterForm from '../components/forms/NewsletterForm.astro';
 import { Icon } from 'astro-icon';
-// import BlogPostsList from '../components/blog/BlogPostsList.astro';
+import BlogPostsList from '../components/blog/BlogPostsList.astro';
 
 const seo = {
 	title: 'Wordle Hints | Just a Hint',
